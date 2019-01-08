@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% for record in records %}
+    <div>
+        <p>Добавлено: {{ record.created_at }}</p>
+        <p>{{ record.description|linebreaksbr }}</p>
+        <p><img src="{{ record.image.url }}" width="200" height="150"></p>
+    </div>
+{% endfor %}
+</body>
+</html>
