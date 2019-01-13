@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entity</title>
+</head>
+<body>
+<p>{{ entity.name_ru }}</p>
+<p><img src="{{ entity.main_image.image.url }}" width="300" height="300"></p>
+<p>C {{ entity.begin_date }} до {% if entity.end_date %} {{ entity.begin_date }} {% else %} ... {% endif %}</p>
+<p>Описание:</p>
+<p>{{ entity.description|linebreaksbr }}</p>
+{% for image in images %}
+    <div>
+        <p><img src="{{ image.image.url }}" width="200" height="150"></p>
+    </div>
+{% empty %}
+    <div>
+        <p>Нет дополнительных изображений :(</p>
+    </div>
+{% endfor %}
+</body>
+</html>

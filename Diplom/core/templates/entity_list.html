@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Entitys</title>
+</head>
+<body>
+{% for entity in entitys %}
+    <div>
+        <p>Добавлено: {{ entity.created_at }}</p>
+        <p>{{ entity.description|linebreaksbr }}</p>
+        <p><img src="{{ entity.main_image.image.url }}" width="200" height="150"></p>
+    </div>
+{% endfor %}
+</body>
+</html>
