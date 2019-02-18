@@ -12,5 +12,24 @@
         <p><img src="{{ entity.main_image.image.url }}" width="200" height="150"></p>
     </div>
 {% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if entitys.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ entitys.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ entitys.number }} of {{ entitys.paginator.num_pages }}.
+        </span>
+
+        {% if entitys.has_next %}
+            <a href="?page={{ entitys.next_page_number }}">next</a>
+            <a href="?page={{ entitys.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 </body>
 </html>

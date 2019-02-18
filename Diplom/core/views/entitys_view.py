@@ -1,10 +1,14 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from ..models import Entity, Image
 
 
 def entity_list(request):
-    entitys = Entity.objects.all().order_by('name_ru').select_related('main_image')
-    return render(request, 'entity_list.html', {'entitys': entitys})
+    entitys_list = Entity.objects.all().order_by('name_ru').select_related('main_image')
+    paginator = Paginator(entitys_list, 20)  # Выводим по 20 элементов
+    page = request.GET.get('page')
+    entitys = paginator.get_page(page)
+    return render(request, 'pleeness/pages/gallery.html', {'entitys': entitys})
 
 
 def entity_detail(request, id):

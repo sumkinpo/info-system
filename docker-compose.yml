@@ -90,6 +90,7 @@ services:
         ports:
             - 8000:8000
 # запускаем gunicorn
+        #command: "gunicorn -c gunicorn.py info_system.wsgi"
         command: "python manage.py runserver 0.0.0.0:8000"
     postgres:
 # Ниже даже расписывать не хочу, насколько все просто: логин, пароль, БД, порты и т.д.
