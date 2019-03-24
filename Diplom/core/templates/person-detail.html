@@ -1,0 +1,67 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<div class="wrapper row3">
+  <main class="hoc container clear">
+    <td class="content">
+      {% if user.is_authenticated %}
+      <div class="div1">
+        <form  action="delete/" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+      </div>
+      <div class="div1">
+        <form action="change/" method="POST">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-medium">Изменить</button>
+        </form>
+      </div>
+      <div>
+        <p></p>
+      {% endif %}
+      <h2>Индекс: {% if index %} {{ index }} {% else %} не указан {% endif %}</h2>
+      <div class="group demo">
+        <table border= "1">
+          <tr>
+            <td>Имя (рус.)</td>
+            <td>{{name_ru}}</td>
+            <td rowspan="100" width="30.0%" height="30.0%"><a href="{{ main_image }}"><img src="{{ main_image }}" alt=""></a></td>
+          </tr>
+          <tr>
+            <td>Имя (lat.)</td>
+            <td>{{name_en}}</td>
+          </tr>
+          <tr>
+            <td>Годы жизни:</td>
+            <td>{% if begin_date %}{{ begin_date }}{% else %}...{% endif %} - {% if end_date %}{{ end_date }}{% else %}...{% endif %}</td>
+          </tr>
+          {% if user.is_authenticated %}
+          {% if notes %}
+          <tr>
+            <td>Заметки:</td>
+            <td>{{ notes }}</td>
+          </tr>
+          {% endif %}
+          {% endif %}
+
+          {% if images %}
+            <tr>
+              <td colspan="2">
+                <div>Изображен на:</div>
+                {% for image in images %}
+                <div><a href="{{ image.image_front_link }}">{{ image.name_ru }}</a></div>
+                {% endfor %}
+              </td>
+          {% else %}
+            <tr>
+              <td colspan="2">Изображения неизвестны</td>
+            </tr>
+        {% endif %}
+        </table>
+    </div>
+  </main>
+</div>
+
+
+{% endblock %}

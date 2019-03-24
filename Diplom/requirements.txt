@@ -3,3 +3,4 @@ gunicorn
 Pillow
 psycopg2
 gevent
+django-rest-framework

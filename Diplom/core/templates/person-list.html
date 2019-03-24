@@ -1,0 +1,35 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<div class="wrapper row3">
+  <main class="hoc container clear">
+    <td class="content">
+      {% if user.is_authenticated %}
+      <div class="div1">
+        <form  action="/frontend/entity-operation/" method="GET">
+          <button type="submit" class="btn btn-danger">Создать</button>
+        </form>
+      </div>
+        <p></p>
+      {% endif %}
+      <h2>Список персон</h2>
+      <div class="group demo">
+        <table border= "1">
+          {% for person in results %}
+          <tr>
+            <td width="20%">{{person.index}}</td>
+            <td width="60%">
+              <a href="{{ person.entity_front_link }}">
+                {{person.name_ru}}
+              </a>
+               (lat:{{person.name_en}}) ({% if person.begin_date %}{{ person.begin_date }}{% else %}...{% endif %} - {% if person.end_date %}{{ person.end_date }}{% else %}...{% endif %})
+            </td>
+            <td width="10%"><a href="{{ person.entity_front_link }}"><img src="{{ person.main_image }}" alt=""></a></td>
+          </tr>
+          {% endfor %}
+        </table>
+    </div>
+  </main>
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<div class="wrapper row3">
+  <main class="hoc container clear">
+    {% if user.is_authenticated %}
+        <form action="." method="post" enctype="multipart/form-data">
+          <table border= "1">
+          {% csrf_token %}
+          {% for field in form %}
+          <tr>
+            <td width="15%">{{ field.label }}</td>
+            <td width="85%">{{ field }}</td>
+          </tr>
+          {% endfor %}
+
+            {% block manual_fields %}
+            {% endblock %}
+          </table>
+          <button type="submit" class="save btn btn-default">Сохранить</button>
+          <button type="reset" class="delete btn btn-default">Отменить</button>
+        </form>
+    {% else %}
+      <h2>Доступно только авторизованным пользователям</h2>
+    {% endif %}
+  </main>
+</div>
+
+{% endblock %}
