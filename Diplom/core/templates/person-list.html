@@ -1,7 +1,7 @@
 {% extends "./base.html" %}
 
 {% block content %}
-<div class="wrapper row3">
+<div class="wrapp row3">
   <main class="hoc container clear">
     <td class="content">
       {% if user.is_authenticated %}
@@ -28,6 +28,18 @@
           </tr>
           {% endfor %}
         </table>
+        <nav class="pagination">
+        <ul>
+          <span class="step-links">
+          {% if previous %}
+            <li><a href="{{ previous }}">&laquo;</a></li>
+          {% endif %}
+          {% if next %}
+            <li><a href="{{ next }}">&raquo;</a></li>
+          {% endif %}
+          </span>
+        </ul>
+      </nav>
     </div>
   </main>
 </div>

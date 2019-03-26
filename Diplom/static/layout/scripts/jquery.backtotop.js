@@ -1,21 +1,12 @@
-/*
-Template Name: Pleeness
-Author: <a href="http://www.os-templates.com/">OS Templates</a>
-Author URI: http://www.os-templates.com/
-Licence: Free to use under our free template licence terms
-Licence URI: http://www.os-templates.com/template-terms
-File: Back to Top JS
-*/
-
-jQuery("#backtotop").click(function () {
+jQuery("#totop").click(function () {
     jQuery("body,html").animate({
         scrollTop: 0
-    }, 600);
+    }, 550);
 });
 jQuery(window).scroll(function () {
-    if (jQuery(window).scrollTop() > 150) {
-        jQuery("#backtotop").addClass("visible");
+    if (jQuery(window).scrollTop() > 200) {
+        jQuery("#totop").addClass("visible");
     } else {
-        jQuery("#backtotop").removeClass("visible");
+        jQuery("#totop").removeClass("visible");
     }
 });

@@ -1,4 +1,3 @@
-from django import db
 from collections import OrderedDict
 from rest_framework import serializers
 
@@ -47,7 +46,6 @@ class ImageSpecializationSerializer(serializers.ModelSerializer):
 
 
 class AuthorSerializer(serializers.ModelSerializer):
-    #main_image = serializers.URLField(source='main_image.image.url')
     images = ImageSpecializationSerializer(many=True, required=False)
     aliases = serializers.PrimaryKeyRelatedField(many=True, queryset=AuthorAlias.objects.all(), source='authoralias_set')
     author_api_link = serializers.HyperlinkedIdentityField(view_name='author-detail', source='author', read_only=True)

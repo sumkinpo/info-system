@@ -1,0 +1,42 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<div class="wrapp row3">
+  <main class="hoc container clear">
+    <form action="/frontend/search-detail/" method="get">
+      <table border= "1">
+      {% for field in form %}
+      <tr>
+        <td width="15%">{{ field.label }}</td>
+        <td width="85%">{{ field }}</td>
+      </tr>
+      {% endfor %}
+      </table>
+      <button type="submit" name="find_all" class="save btn btn-default">Найти всё</button>
+      <button type="submit" name="find_image" class="save btn btn-default">Найти изображения</button>
+    </form>
+    <p></p>
+
+      <ul>
+        {% for post in object_list %}
+          <li><a href="{{ post.1 }}">{{ post.0 }}</a></li>
+        {% endfor %}
+      </ul>
+
+    {% if is_paginated %}
+      <nav class="pagination">
+           <li class="current"> {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</li>
+        <ul>
+            {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+            {% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  </main>
+</div>
+
+{% endblock %}

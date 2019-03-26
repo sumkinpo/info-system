@@ -1,7 +1,7 @@
 {% extends "./base.html" %}
 
 {% block content %}
-<div class="wrapper row3">
+<div class="wrapp row3">
   <main class="hoc container clear">
     {% if user.is_authenticated %}
         <form action="." method="post" enctype="multipart/form-data">
@@ -13,13 +13,12 @@
             <td width="85%">{{ field }}</td>
           </tr>
           {% endfor %}
-
-            {% block manual_fields %}
-            {% endblock %}
           </table>
           <button type="submit" class="save btn btn-default">Сохранить</button>
           <button type="reset" class="delete btn btn-default">Отменить</button>
         </form>
+      {% block manual_fields %}
+      {% endblock %}
     {% else %}
       <h2>Доступно только авторизованным пользователям</h2>
     {% endif %}

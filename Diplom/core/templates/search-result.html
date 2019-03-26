@@ -1,0 +1,35 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<div class="wrapp row3">
+  <main class="hoc container clear">
+      {% if not object_list %}
+        <p>Поиск по запросу "{{ request.GET.query }}" не дал результатов</p>
+        <p>Воспользуйтесь расширеным поиском или уточните запрос</p>
+      {% else %}
+
+        <p>Результаты поиска для "{{ request.GET.query }}"</p>
+        <ul>
+          {% for post in object_list %}
+            <li><a href="{{ post.1 }}">{{ post.0 }}</a></li>
+          {% endfor %}
+        </ul>
+
+        {% if is_paginated %}
+          <nav class="pagination">
+               <li class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</li>
+            <ul>
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% endif %}
+                {% if page_obj.has_next %}
+                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% endif %}
+            </ul>
+          </nav>
+        {% endif %}
+      {% endif %}
+  </main>
+</div>
+
+{% endblock %}

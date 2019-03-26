@@ -1,7 +1,7 @@
 {% extends "./base.html" %}
 
 {% block content %}
-<div class="wrapper row3">
+<div class="wrapp row3">
   <main class="hoc container clear">
     {% if user.is_authenticated %}
         <form action="." method="post" enctype="multipart/form-data">
@@ -13,39 +13,34 @@
             <td width="85%">{{ field }}</td>
           </tr>
           {% endfor %}
-            <tr><td colspan="2"><h3>Список авторов:</h3></td></td></tr>
-            <tr>
-              <td>Специализация</td>
-              <td>Автор</td>
-            </tr>
-              <tr>
-                <td><textarea name="spec1" cols="20" rows="2" id="id_spec1"></textarea></td>
-                <td><textarea name="author1" cols="20" rows="2" id="id_author1"></textarea></td>
-              </tr>
-              <tr>
-                <td><textarea name="spec2" cols="20" rows="2" id="id_spec2"></textarea></td>
-                <td><textarea name="author2" cols="20" rows="2" id="id_author2"></textarea></td>
-              </tr>
-              <tr>
-                <td><textarea name="spec3" cols="20" rows="2" id="id_spec3"></textarea></td>
-                <td><textarea name="author3" cols="20" rows="2" id="id_author3"></textarea></td>
-              </tr>
-              <tr>
-                <td><textarea name="spec4" cols="20" rows="2" id="id_spec4"></textarea></td>
-                <td><textarea name="author4" cols="20" rows="2" id="id_author4"></textarea></td>
-              </tr>
-              <tr>
-                <td><textarea name="spec5" cols="20" rows="2" id="id_spec5"></textarea></td>
-                <td><textarea name="author5" cols="20" rows="2" id="id_author5"></textarea></td>
-              </tr>
           </table>
-          <button type="submit" class="save btn btn-default">Сохранить</button>
-          <button type="reset" class="delete btn btn-default">Отменить</button>
-        </form>
+        <p></p>
+    {{ formset.management_form }}
+    <table border= "1">
+        <tr>
+            <td width="30%">Специализация:</td>
+            <td width="30%">Автор:</td>
+            <td width="30%">Удалить:</td>
+         </tr>
+      {% for form in formset %}
+        <tr>
+          {% for field in form.visible_fields %}
+          <td width="30%" align="left">{{ field }}</td>
+          {% endfor %}
+         </tr>
+        {% for field in form.hidden_fields %}
+        <ul hidden="hidden">{{ field }}</ul>
+        {% endfor %}
+      {% endfor %}
+    </table>
+    <button type="submit" class="save btn btn-default">Сохранить</button>
+    <button type="reset" class="delete btn btn-default">Отменить</button>
+</form>
     {% else %}
       <h2>Доступно только авторизованным пользователям</h2>
     {% endif %}
   </main>
 </div>
+<p></p>
 
 {% endblock %}
