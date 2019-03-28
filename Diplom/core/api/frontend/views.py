@@ -4,8 +4,9 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
 from django.forms import inlineformset_factory
-from django.template import RequestContext
 from rest_framework import renderers
+from dal import autocomplete
+from django_select2.forms import ModelSelect2Widget, Select2MultipleWidget, Select2Widget, HeavySelect2Widget
 
 from ...models import AuthorsSpecialization
 from ..views import (
@@ -109,7 +110,8 @@ class ImageView(BaseModelView):
         else:
             instance = get_object_or_404(self.model, pk=pk)
             form = self.form(instance=instance)
-        AuthorInlineFormSet = inlineformset_factory(Image, AuthorsSpecialization, fields=('specialization', 'author',))
+        AuthorInlineFormSet = inlineformset_factory(Image, AuthorsSpecialization, fields=('specialization', 'author',),
+                                                    widgets={'author': Select2Widget})
         formset = AuthorInlineFormSet(instance=instance)
         return render(request, self.template, {'formset': formset, 'form': form})
 
@@ -413,5 +415,17 @@ class SearchView(ListView):
                 queryset = []
                 if self.request.session.get('searchset'):
                     del self.request.session['searchset']
-                    if self.request.session.get('get_data'): del self.request.session['get_data']
+                    if self.request.session.get('get_data'):
+                        del self.request.session['get_data']
         return queryset
+
+
+from ...models import Author
+class AuthorAutocomplete(ListView):
+     def get_queryset(self):
+         if not self.request.user.is_authenticated:
+               return Author.objects.none()
+         qs = Author.objects.all()
+         if self.q:
+               qs = qs.filter(Q(name_ru__istartswith=self.q) | Q(name_en__istartswith=self.q))
+         return qs

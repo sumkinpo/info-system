@@ -1,6 +1,8 @@
 {% extends "./base.html" %}
-
 {% block content %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <div class="wrapp row3">
   <main class="hoc container clear">
     {% if user.is_authenticated %}
@@ -25,7 +27,7 @@
       {% for form in formset %}
         <tr>
           {% for field in form.visible_fields %}
-          <td width="30%" align="left">{{ field }}</td>
+            <td width="30%" align="left">{{ field }}</td>
           {% endfor %}
          </tr>
         {% for field in form.hidden_fields %}
@@ -41,6 +43,6 @@
     {% endif %}
   </main>
 </div>
-<p></p>
+{{ formset.media.js }}
 
 {% endblock %}

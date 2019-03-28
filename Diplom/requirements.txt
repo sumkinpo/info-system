@@ -4,3 +4,4 @@ Pillow
 psycopg2
 gevent
 django-rest-framework
+django-autocomplete-light

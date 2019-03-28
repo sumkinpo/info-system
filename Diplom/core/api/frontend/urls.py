@@ -2,7 +2,7 @@ from .views import (
     FrontendImageList, FrontendImageDetail, ImageView, ImageOperation,
     FrontendEntityList, FrontendEntityDetail, EntityView, EntityOperation,
     FrontendAuthorList, FrontendAuthorDetail, AuthorView, AuthorOperation,
-    SearchDetailView, SearchView,
+    SearchDetailView, SearchView, AuthorAutocomplete
 )
 from django.conf.urls import url
 
@@ -26,5 +26,8 @@ urlpatterns = [
     url(r'^image-operation/(?P<pk>\d+)/$', ImageView.as_view(), name='image-change'),
 
     url(r'^search-detail/$', SearchDetailView.as_view(), name='search-detail'),
-    url(r'^search/$', SearchView.as_view(), name='search'),
+    url(r'^search/$', AuthorAutocomplete.as_view(), name='search'),
+
+
+    url(r'^author-autocomplete/$', AuthorAutocomplete.as_view(), name='author-autocomplete'),
 ]

@@ -8,9 +8,6 @@
 .row2, .row2 a{}
 .row3, .row3 a{}
 
-/* Top Bar */
-#topbar{padding:5px 0; font-size:12px;}
-
 /* Header */
 #header{padding:30px 0;}
 #header #logo{margin-top:3px; font-variant:small-caps;}
@@ -23,22 +20,6 @@
 
 /* Content */
 .container{padding:80px 0;}
-
-/* Content */
-.container .content{}
-
-.element{display:block; width:100%; max-width:320px; padding:20px;}
-.element figure{display:block; position:relative; margin-bottom:20px; text-align:center;}
-.element figure::before{position:absolute; top:10px; right:10px; bottom:10px; left:10px; border:4px solid; content:""; opacity:1;}
-.element figure figcaption{position:absolute; top:50%; left:50%; width:50px; height:50px; line-height:46px; margin:-25px 0 0 -25px; border:2px solid; font-size:18px; opacity:0; overflow:hidden;}
-.element:hover figure::before{opacity:0;}
-.element:hover figure figcaption{opacity:1;}
-.element figure figcaption a{display:block;}
-.element .excerpt{}
-.element .excerpt *{margin:0;}
-.element .excerpt .heading{}
-.element .excerpt time{display:block; font-size:.8rem; margin-bottom:5px;}
-.element .excerpt footer{margin-top:10px;}
 
 /* Transition Fade */
 *, *::before, *::after{transition:all .3s ease-in-out;}
@@ -93,6 +74,12 @@ table, th{table-layout:auto;}
 table{width:100%; margin-bottom:15px;}
 th, td{padding:5px 8px;}
 td{border-width:0 1px;}
+
+
+/* Gallery */
+#gallery{display:block; width:100%; margin-bottom:50px;}
+#gallery figure figcaption{display:block; width:100%; clear:both;}
+#gallery li{margin-bottom:30px;}
 
 
 /* Colours */

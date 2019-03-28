@@ -38,6 +38,9 @@ LANGUAGES = (
 # Application definition
 
 INSTALLED_APPS = [
+    #'dal',
+    #'dal_select2',
+    'django_select2',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -149,6 +152,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 20,
+    'PAGE_SIZE': 2,
     'UPLOADED_FILES_USE_URL': True,
 }

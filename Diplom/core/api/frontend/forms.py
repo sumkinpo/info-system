@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
+
 from ...models import Author, Entity, Image, AuthorsSpecialization
 
 
@@ -72,3 +73,6 @@ class SearchDetailForm(forms.Form):
 class SearchForm(forms.Form):
     query = forms.CharField(required=False)
 
+#
+# class MyForm(forms.Form):
+#     things = ModelMultipleChoiceField(queryset=Thing.objects.all())
