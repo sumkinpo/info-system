@@ -50,7 +50,7 @@
               <td colspan="2">
                 <div>Изображен на:</div>
                 {% for image in images %}
-                <div><a href="{{ image.image_front_link }}">{{ image.name_ru }}</a></div>
+                <div><a href="/frontend/image/{{ image.id }}">{{ image.name_ru }}</a></div>
                 {% endfor %}
               </td>
           {% else %}

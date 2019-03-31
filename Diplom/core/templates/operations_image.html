@@ -1,6 +1,10 @@
 {% extends "./base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" media="all" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+
 <div class="wrapp row3">
   <main class="hoc container clear">
     {% if user.is_authenticated %}
@@ -43,4 +47,20 @@
 </div>
 <p></p>
 
+
+
+{% endblock %}
+
+{% block custom_js %}
+<script>
+$(function() {
+  $('[id$="-author"]').autocomplete({
+    source: "/frontend/ajax_calls/search/",
+    minLength: 2,
+    formatItem: function(row) { return row[1] + ' (' + row[0] + ')'; },
+    formatResult: function(row) { return row[0]; },
+  });
+});
+
+</script>
 {% endblock %}

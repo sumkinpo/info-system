@@ -51,7 +51,7 @@
               <td>{{image.grouper}}</td>
               <td>
                 {% for item in image.list %}
-                  <div><a href="{{ item.image_front_link }}">{{ item.image }}</a></div>
+                  <div><a href="/frontend/image/{{ item.id }}">{{ item.image }}</a></div>
                 {% endfor %}
               </td>
           {% endfor %}

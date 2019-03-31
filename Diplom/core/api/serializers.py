@@ -34,10 +34,17 @@ class PrimaryKeySerializerField(serializers.PrimaryKeyRelatedField):
         return serializer.data
 
 
+class ImageURLField(serializers.URLField):
+    def to_representation(self, value):
+        if value:
+            return value.image.url
+        else: return ""
+
+
 class ImageSpecializationSerializer(serializers.ModelSerializer):
     image = serializers.SlugRelatedField(read_only=True, slug_field='name_ru')
-    image_api_link = serializers.HyperlinkedIdentityField(view_name='image-detail', source='image')
-    image_front_link = serializers.HyperlinkedIdentityField(view_name='image-detail-front', source='image')
+    image_api_link = serializers.HyperlinkedIdentityField(view_name='image-detail', source='image_id')
+    image_front_link = serializers.HyperlinkedIdentityField(view_name='image-detail-front', source='image_id')
     specialization = serializers.ChoiceField(choices=AuthorsSpecialization.SPECIALIZATIONS, source='get_specialization_display')
 
     class Meta:
@@ -48,8 +55,8 @@ class ImageSpecializationSerializer(serializers.ModelSerializer):
 class AuthorSerializer(serializers.ModelSerializer):
     images = ImageSpecializationSerializer(many=True, required=False)
     aliases = serializers.PrimaryKeyRelatedField(many=True, queryset=AuthorAlias.objects.all(), source='authoralias_set')
-    author_api_link = serializers.HyperlinkedIdentityField(view_name='author-detail', source='author', read_only=True)
-    author_front_link = serializers.HyperlinkedIdentityField(view_name='author-detail-front', source='author', read_only=True)
+    author_api_link = serializers.HyperlinkedIdentityField(view_name='author-detail', source='author_id', read_only=True)
+    author_front_link = serializers.HyperlinkedIdentityField(view_name='author-detail-front', source='author_id', read_only=True)
 
     class Meta:
         model = Author
@@ -72,7 +79,7 @@ class AuthorSpecSerializer(serializers.Serializer):
     specialization = serializers.ChoiceField(choices=AuthorsSpecialization.SPECIALIZATIONS, source='get_specialization_display')
     author = PrimaryKeySerializerField(serializer=AuthorShortSerializer, queryset=Author.objects.all())
     author_api_link = serializers.HyperlinkedIdentityField(view_name='author-detail', source='author', read_only=True)
-    author_front_link = serializers.HyperlinkedIdentityField(view_name='author-detail-front', source='author', read_only=True)
+    author_front_link = serializers.HyperlinkedIdentityField(view_name='author-detail-front', source='author')
 
 
 class ImageShortSerializer(serializers.ModelSerializer):
@@ -89,7 +96,7 @@ class ImageShortSerializer(serializers.ModelSerializer):
 
 
 class EntitySerializer(serializers.HyperlinkedModelSerializer):
-    main_image = serializers.URLField(source='main_image.image.url')
+    main_image = ImageURLField()
     images = PrimaryKeySerializerField(serializer=ImageShortSerializer, many=True, queryset=Image.objects.all())
     entity_api_link = serializers.HyperlinkedIdentityField(view_name='entity-detail', source='self', read_only=True)
     entity_front_link = serializers.HyperlinkedIdentityField(view_name='entity-detail-front', source='self', read_only=True)

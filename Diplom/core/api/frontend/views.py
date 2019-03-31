@@ -3,6 +3,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView
+from django.forms import widgets
 from django.forms import inlineformset_factory
 from django.template import RequestContext
 from rest_framework import renderers
@@ -19,7 +20,7 @@ from ...models import Author, Entity, Image
 
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .forms import AuthorForm, EntityForm, ImageForm, SearchDetailForm
+from .forms import AuthorForm, EntityForm, ImageForm, SearchDetailForm, AuthorSpecializationForm
 
 
 class BaseOperationView(View):
@@ -109,13 +110,13 @@ class ImageView(BaseModelView):
         else:
             instance = get_object_or_404(self.model, pk=pk)
             form = self.form(instance=instance)
-        AuthorInlineFormSet = inlineformset_factory(Image, AuthorsSpecialization, fields=('specialization', 'author',))
+        AuthorInlineFormSet = inlineformset_factory(Image, AuthorsSpecialization, form=AuthorSpecializationForm)
         formset = AuthorInlineFormSet(instance=instance)
         return render(request, self.template, {'formset': formset, 'form': form})
 
     def post(self, request, pk=None):
         instance = None
-        AuthorInlineFormSet = inlineformset_factory(Image, AuthorsSpecialization, fields=('specialization', 'author',))
+        AuthorInlineFormSet = inlineformset_factory(Image, AuthorsSpecialization, form=AuthorSpecializationForm)  #, fields=('specialization', 'author',), widgets={'author': widgets.Textarea})
         if pk:
             instance = get_object_or_404(self.model, pk=pk)
         form = self.form(request.POST, request.FILES, instance=instance)
@@ -302,7 +303,6 @@ class SearchDetailView(ListView):
         return results
 
     def search(self):
-        print(self.request.GET)
         return []
 
     def get_queryset(self):
@@ -401,7 +401,6 @@ class SearchView(ListView):
         return results
 
     def get_queryset(self):
-        print(self.request.GET)
         if 'query' in self.request.GET:
             queryset = self.get_data()
             self.request.session['searchset'] = queryset
@@ -415,3 +414,19 @@ class SearchView(ListView):
                     del self.request.session['searchset']
                     if self.request.session.get('get_data'): del self.request.session['get_data']
         return queryset
+
+
+def autocompleteModel(request):
+    import json
+    from django.http import HttpResponse
+    if request.is_ajax():
+        q = request.GET.get('term', '').capitalize()
+        search_qs = Author.objects.filter(Q(name_ru__icontains=q) | Q(name_en__icontains=q)).order_by('name_ru')
+        results = []
+        for r in search_qs:
+            results.append(f'Ind: {r.index if r.index else "..."} | Рус: {r.name_ru if r.name_ru else "..."} | Lat: {r.name_en if r.name_en else "..."}')
+        data = json.dumps(results)
+    else:
+        data = 'fail'
+    mimetype = 'application/json'
+    return HttpResponse(data, mimetype)

@@ -2,7 +2,7 @@ from .views import (
     FrontendImageList, FrontendImageDetail, ImageView, ImageOperation,
     FrontendEntityList, FrontendEntityDetail, EntityView, EntityOperation,
     FrontendAuthorList, FrontendAuthorDetail, AuthorView, AuthorOperation,
-    SearchDetailView, SearchView,
+    SearchDetailView, SearchView, autocompleteModel,
 )
 from django.conf.urls import url
 
@@ -27,4 +27,6 @@ urlpatterns = [
 
     url(r'^search-detail/$', SearchDetailView.as_view(), name='search-detail'),
     url(r'^search/$', SearchView.as_view(), name='search'),
+
+    url(r'^ajax_calls/search/', autocompleteModel, name='auto-complete'),
 ]

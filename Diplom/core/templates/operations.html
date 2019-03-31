@@ -15,7 +15,7 @@
           {% endfor %}
           </table>
           <button type="submit" class="save btn btn-default">Сохранить</button>
-          <button type="reset" class="delete btn btn-default">Отменить</button>
+          <button type="reset" class="delete btn btn-default" onclick="history.back();">Отменить</button>
         </form>
       {% block manual_fields %}
       {% endblock %}
