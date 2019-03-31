@@ -90,7 +90,9 @@ class AuthorNameField(forms.CharField):
     def prepare_value(self, value):
         if value:
             author = Author.objects.get(id=value)
-            value = f'Ind: {author.index if author.index else "..."} | Рус: {author.name_ru if author.name_ru else "..."} | Lat: {author.name_en if author.name_en else "..."}'
+            value = f'Ind: {author.index if author.index else "..."} | ' \
+                    f'Рус: {author.name_ru if author.name_ru else "..."} | ' \
+                    f'Lat: {author.name_en if author.name_en else "..."}'
         return value
 
 
