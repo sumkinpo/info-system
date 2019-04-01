@@ -92,6 +92,7 @@ class AuthorsSpecialization(models.Model):
     SPECIALIZATIONS = (
         ('engraver', _('Гравер')),
         ('painter', _('Художник')),
+        ('publisher', _('Издатель')),
     )
 
     specialization = models.TextField(verbose_name=_('Специальность'), choices=SPECIALIZATIONS)

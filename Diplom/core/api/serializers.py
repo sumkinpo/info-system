@@ -38,21 +38,33 @@ class ImageURLField(serializers.URLField):
     def to_representation(self, value):
         if value:
             return value.image.url
-        else: return ""
+        else:
+            return ""
 
 
 class ImageSpecializationSerializer(serializers.ModelSerializer):
-    image = serializers.SlugRelatedField(
+    image_id = serializers.SlugRelatedField(
         read_only=True,
+        source='image',
+        slug_field='id',
+    )
+    image_ru = serializers.SlugRelatedField(
+        read_only=True,
+        source='image',
         slug_field='name_ru',
+    )
+    image_en = serializers.SlugRelatedField(
+        read_only=True,
+        source='image',
+        slug_field='name_en',
     )
     image_api_link = serializers.HyperlinkedIdentityField(
         view_name='image-detail',
-        source='image_id',
+        source='image',
     )
     image_front_link = serializers.HyperlinkedIdentityField(
         view_name='image-detail-front',
-        source='image_id',
+        source='image',
     )
     specialization = serializers.ChoiceField(
         choices=AuthorsSpecialization.SPECIALIZATIONS,
@@ -61,7 +73,7 @@ class ImageSpecializationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AuthorsSpecialization
-        fields = ('image', 'image_api_link', 'image_front_link', 'specialization')
+        fields = ('image_id', 'image_ru', 'image_en', 'image_api_link', 'image_front_link', 'specialization')
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -102,7 +114,7 @@ class AuthorShortSerializer(serializers.ModelSerializer):
         fields = ('id', 'index', 'name_ru', 'name_en',)
 
 
-class AuthorSpecSerializer(serializers.Serializer):
+class AuthorSpecSerializer(serializers.ModelSerializer):
     specialization = serializers.ChoiceField(
         choices=AuthorsSpecialization.SPECIALIZATIONS,
         source='get_specialization_display',
@@ -121,6 +133,10 @@ class AuthorSpecSerializer(serializers.Serializer):
         source='author',
     )
 
+    class Meta:
+        model = AuthorsSpecialization
+        fields = ('id', 'author', 'author_api_link', 'author_front_link', 'specialization')
+
 
 class ImageShortSerializer(serializers.ModelSerializer):
     image_api_link = serializers.HyperlinkedIdentityField(
@@ -137,7 +153,7 @@ class ImageShortSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = (
-            'name_ru', 'name_en',
+            'id', 'name_ru', 'name_en',
             'create_data',
             'image_api_link', 'image_front_link',
         )

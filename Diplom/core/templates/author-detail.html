@@ -51,7 +51,7 @@
               <td>{{image.grouper}}</td>
               <td>
                 {% for item in image.list %}
-                  <div><a href="/frontend/image/{{ item.id }}">{{ item.image }}</a></div>
+                  <div><a href="/frontend/image/{{ item.image_id }}/">{% if item.image_ru %}{{ item.image_ru }}{% else %}{{item.image_en}}{% endif %}</a></div>
                 {% endfor %}
               </td>
           {% endfor %}
