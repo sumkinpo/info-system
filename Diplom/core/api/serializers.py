@@ -218,7 +218,7 @@ class ImageSerializer(serializers.ModelSerializer):
         model = Image
         fields = (
             'id',
-            'image',
+            'image', 'thumb_image',
             'name_ru', 'name_en', 'name_other',
             'description', 'description_lat', 'notes',
             'create_data', 'source_link',

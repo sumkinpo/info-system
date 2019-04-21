@@ -19,12 +19,12 @@
           <tr>
             <td width="70%">
               <div>
-                <a href="/frontend/author/{{ author.id }}">
+                <a href="/frontend/author/{{ author.id }}/">
                   {{author.name_ru}}(lat:{{author.name_en}}) ({% if author.begin_date %}{{ author.begin_date }}{% else %}...{% endif %} - {% if author.end_date %}{{ author.end_date }}{% else %}...{% endif %})
                 </a>
               </div>
             </td>
-            <td width="10%"><a href="/frontend/author/{{ author.id }}"><img src="{{ author.main_image }}" alt=""></a></td>
+            <td width="10%"><a href="/frontend/author/{{ author.id }}/"><img src="{% if author.main_image %}{{ author.main_image }}{% else %}/media/no-image.jpg{% endif %}" alt=""></a></td>
           </tr>
           {% endfor %}
         </table>

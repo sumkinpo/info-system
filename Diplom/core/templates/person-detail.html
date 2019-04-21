@@ -26,7 +26,7 @@
           <tr>
             <td>Имя (рус.)</td>
             <td>{{name_ru}}</td>
-            <td rowspan="100" width="30.0%" height="30.0%"><a href="{{ main_image }}"><img src="{{ main_image }}" alt=""></a></td>
+            <td rowspan="100" width="30.0%" height="30.0%"><a href="{{ main_image }}"><img src="{% if main_image %}{{ main_image }}{% else %}/media/no-image.jpg{% endif %}" alt=""></a></td>
           </tr>
           <tr>
             <td>Имя (lat.)</td>

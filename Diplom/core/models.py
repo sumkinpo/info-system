@@ -1,3 +1,8 @@
+from io import BytesIO
+from PIL import Image as Pil_Image
+import sys
+
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
@@ -60,6 +65,7 @@ class Author(models.Model):
 
 class Image(models.Model):
     image = models.ImageField(verbose_name=_('Изображение'), blank=True, default=None, upload_to='media')
+    thumb_image = models.ImageField(verbose_name='Превью', default=None, upload_to='media/thumbs', null=True)
     name_ru = models.TextField(verbose_name=_('Название'), blank=True, default='')
     name_en = models.TextField(verbose_name=_('Name'), blank=True, default='')
     name_other = models.TextField(verbose_name=_('Name_other'), blank=True, default='')
@@ -83,6 +89,24 @@ class Image(models.Model):
 
     def __str__(self):
         return f'Id: {self.id}, Name: {self.name_ru}'
+
+    def save(self, *args, **kwargs):
+        if self.image and not self.thumb_image:
+            img = Pil_Image.open(self.image.path)
+            img.thumbnail((img.width // 10, img.height // 10))
+            output = BytesIO()
+            img.save(output, format='JPEG', quality=100)
+            output.seek(0)
+            self.thumb_image = InMemoryUploadedFile(
+                output,
+                'ImageField',
+                "%s.jpg" % self.image.name.split('.')[0],
+                'image/jpeg',
+                sys.getsizeof(output),
+                None,
+            )
+        super(Image, self).save(*args, **kwargs)
+
 
     class Meta:
         ordering = ['name_ru']

@@ -19,12 +19,12 @@
           <tr>
             <td width="20%">{{person.index}}</td>
             <td width="60%">
-              <a href="/frontend/entity/{{ person.id }}">
+              <a href="/frontend/entity/{{ person.id }}/">
                 {{person.name_ru}}
               </a>
                (lat:{{person.name_en}}) ({% if person.begin_date %}{{ person.begin_date }}{% else %}...{% endif %} - {% if person.end_date %}{{ person.end_date }}{% else %}...{% endif %})
             </td>
-            <td width="10%"><a href="/frontend/entity/{{ person.id }}"><img src="{{ person.main_image }}" alt=""></a></td>
+            <td width="10%"><a href="/frontend/entity/{{ person.id }}/"><img src="{% if person.main_image %}{{ person.main_image }}{% else %}/media/no-image.jpg{% endif %}" alt=""></a></td>
           </tr>
           {% endfor %}
         </table>

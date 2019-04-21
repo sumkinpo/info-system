@@ -56,4 +56,9 @@ hr{display:block; width:100%; height:1px; border:solid; border-width:1px 0 0 0;}
 /* HTML5 */
 figure, header, main, nav {display:block; margin:0; padding:0;}
 
+.first{margin-left:0, clear:left;}
 .one_quarter{width:22%; display:inline-block; float:left; margin:0 0 0 3%; list-style:none;}
+
+.gallery3 { overflow: hidden; width: 100%; }
+.gallery3 .ramka { float: left; margin-right: 2%; margin-bottom: 10px; width: 23%; height: 250px; overflow: hidden;}
+.gallery3 img { width: 100% }

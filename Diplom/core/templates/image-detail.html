@@ -26,7 +26,7 @@
           <tr>
             <td>Название (рус.)</td>
             <td>{{name_ru}}</td>
-            <td rowspan="100" width="35.0%" height="35.0%"><a href="{{ image }}"><img src="{{ image }}" alt=""></a></td>
+            <td rowspan="100" width="35.0%" height="35.0%"><a href="{{ image }}"><img src="{% if image %}{{ image }} {% else %} /media/no-image.jpg {% endif %}" alt=""></a></td>
           </tr>
           <tr>
             <td>Название (lat.)</td>
@@ -35,7 +35,7 @@
           <tr>
             <td>Изображен</td>
             <td>
-              <div><a href="/frontend/entity/{{entity.id}}">{% if entity.name_ru %} {{ entity.name_ru }} {% else %} {{ entity.name_en }} {% endif %}</a></div>
+              <div><a href="/frontend/entity/{{entity.id}}/">{% if entity.name_ru %} {{ entity.name_ru }} {% else %} {{ entity.name_en }} {% endif %}</a></div>
             </td>
           </tr>
           <tr>
@@ -53,7 +53,7 @@
               <td>{{author.grouper}}</td>
               <td>
                 {% for item in author.list %}
-                  <div><a href="/frontend/author/{{item.author.id}}">{% if item.author.name_ru %} {{ item.author.name_ru }} {% else %} {{ item.author.name_en }} {% endif %}</a></div>
+                  <div><a href="/frontend/author/{{item.author.id}}/">{% if item.author.name_ru %} {{ item.author.name_ru }} {% else %} {{ item.author.name_en }} {% endif %}</a></div>
                 {% endfor %}
               </td>
           {% endfor %}

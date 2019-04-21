@@ -134,13 +134,22 @@ USE_TZ = True
 #     '/srv/www/Diplom/media/',
 # )
 
-MEDIA_URL = os.path.join(BASE_DIR) + '/'
-STATIC_URL = os.path.join(BASE_DIR, 'media/')
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_URL = '/'
+STATIC_URL = '/static/'
+
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'media'),
+    os.path.join(BASE_DIR, '/'),
     os.path.join(BASE_DIR, 'static'),
 )
+
+
+# MEDIA_URL = os.path.join(BASE_DIR) + '/'
+# STATIC_URL = os.path.join(BASE_DIR, 'media/')
+# # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATICFILES_DIRS = (
+#     os.path.join(BASE_DIR, 'media'),
+#     os.path.join(BASE_DIR, 'static'),
+# )
 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
