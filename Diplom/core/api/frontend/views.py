@@ -29,7 +29,7 @@ class BaseOperationView(View):
     list_path = ''
 
     def do_change(self, request, pk):
-        return HttpResponseRedirect(redirect_to=f'/frontend/{self.operation_path}/{pk}')
+        return HttpResponseRedirect(redirect_to=f'/frontend/{self.operation_path}/{pk}/')
 
     def do_delete(self, request, pk):
         instance = get_object_or_404(self.model, pk=pk)
@@ -81,7 +81,7 @@ class BaseModelView(View):
         form = self.form(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             instance = form.save()
-            return redirect(f'{self.path_to_redirect}/{instance.pk}')
+            return redirect(f'{self.path_to_redirect}/{instance.pk}/')
         return render(request, self.template, {'form': form})
 
 
@@ -127,7 +127,7 @@ class ImageView(BaseModelView):
             if formset.is_valid():
                 form.save(commit=True)
                 formset.save(commit=True)
-                return redirect(f'{self.path_to_redirect}/{instance.pk}')
+                return redirect(f'{self.path_to_redirect}/{instance.pk}/')
         return render(request, self.template, {'form': form, 'formset': formset})
 
 

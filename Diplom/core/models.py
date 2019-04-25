@@ -13,16 +13,16 @@ class Category(models.Model):
 
 
 class Entity(models.Model):
-    name_ru = models.TextField(verbose_name=_('Наименование'), blank=True, default='')
-    name_en = models.TextField(verbose_name=_('Name'), blank=True, default='')
-    name_other = models.TextField(verbose_name=_('Name_other'), blank=True, default='')
-    begin_date = models.TextField(verbose_name=_('Дата начала'))
+    name_ru = models.TextField(verbose_name=_('Наименование'), blank=True, default='', null=True)
+    name_en = models.TextField(verbose_name=_('Name'), blank=True, default='', null=True)
+    name_other = models.TextField(verbose_name=_('Name_other'), blank=True, default='', null=True)
+    begin_date = models.TextField(verbose_name=_('Дата начала'), null=True)
     end_date = models.TextField(verbose_name=_('Дата окончания'), blank=True, null=True, default=None)
-    description = models.TextField(verbose_name=_('Описание'), blank=True, default='')
-    notes = models.TextField(verbose_name=_('Примечание'), blank=True, default='')
-    source = models.TextField(verbose_name=_('Источник'), blank=True, default='')
-    source_link = models.URLField(verbose_name=_('Ссылка на источник'), blank=True, default='')
-    index = models.TextField(verbose_name=_('Индекс'), blank=True, default='')
+    description = models.TextField(verbose_name=_('Описание'), blank=True, default='', null=True)
+    notes = models.TextField(verbose_name=_('Примечание'), blank=True, default='', null=True)
+    source = models.TextField(verbose_name=_('Источник'), blank=True, default='', null=True)
+    source_link = models.URLField(verbose_name=_('Ссылка на источник'), blank=True, default='', null=True)
+    index = models.TextField(verbose_name=_('Индекс'), blank=True, default='', null=True)
 
     category = models.ManyToManyField(
         Category,
@@ -47,14 +47,13 @@ class Entity(models.Model):
 
 
 class Author(models.Model):
-    name_ru = models.TextField(verbose_name=_('Наименование'), blank=True, default='')
-    name_en = models.TextField(verbose_name=_('Name'), blank=True, default='')
-    name_other = models.TextField(verbose_name=_('Name_other'), blank=True, default='')
-    begin_date = models.TextField(verbose_name=_('Дата рождения'), blank=True)
-    end_date = models.TextField(verbose_name=_('Дата смерти'), blank=True)
-    index = models.TextField(verbose_name=_('Индекс'), blank=True, default='')
-    notes = models.TextField(verbose_name=_('Примечание'), blank=True, default='')
-    main_image = models.ImageField(verbose_name=_('Изображение'), blank=True, default=None, upload_to='media')
+    name_ru = models.TextField(verbose_name=_('Наименование'), blank=True, default='', null=True)
+    name_en = models.TextField(verbose_name=_('Name'), blank=True, default='', null=True)
+    name_other = models.TextField(verbose_name=_('Name_other'), blank=True, default='', null=True)
+    begin_date = models.TextField(verbose_name=_('Дата рождения'), blank=True, null=True)
+    end_date = models.TextField(verbose_name=_('Дата смерти'), blank=True, null=True)
+    index = models.TextField(verbose_name=_('Индекс'), blank=True, default='', null=True)
+    notes = models.TextField(verbose_name=_('Примечание'), blank=True, default='', null=True)
 
     class Meta:
         ordering = ['name_ru']
@@ -66,16 +65,16 @@ class Author(models.Model):
 class Image(models.Model):
     image = models.ImageField(verbose_name=_('Изображение'), blank=True, default=None, upload_to='media')
     thumb_image = models.ImageField(verbose_name='Превью', default=None, upload_to='media/thumbs', null=True)
-    name_ru = models.TextField(verbose_name=_('Название'), blank=True, default='')
-    name_en = models.TextField(verbose_name=_('Name'), blank=True, default='')
-    name_other = models.TextField(verbose_name=_('Name_other'), blank=True, default='')
-    description = models.TextField(verbose_name=_('Описание'), blank=True, default='')
-    description_lat = models.TextField(verbose_name=_('Описание lat'), blank=True, default='')
+    name_ru = models.TextField(verbose_name=_('Название'), blank=True, default='', null=True)
+    name_en = models.TextField(verbose_name=_('Name'), blank=True, default='', null=True)
+    name_other = models.TextField(verbose_name=_('Name_other'), blank=True, default='', null=True)
+    description = models.TextField(verbose_name=_('Описание'), blank=True, default='', null=True)
+    description_lat = models.TextField(verbose_name=_('Описание lat'), blank=True, default='', null=True)
     created_at = models.DateTimeField(verbose_name=_('Дата создания в базе'), default=timezone.now)
     modified_at = models.DateTimeField(verbose_name=_('Дата изменения в базе'), auto_now=timezone.now)
-    create_data = models.TextField(verbose_name=_('Дата создания'), default='', blank=True)
-    source_link = models.URLField(verbose_name=_('Ссылка на источник'), blank=True, default='')
-    notes = models.TextField(verbose_name=_('Примечание'), blank=True, default='')
+    create_date = models.TextField(verbose_name=_('Дата создания'), default='', blank=True, null=True)
+    source_link = models.URLField(verbose_name=_('Ссылка на источник'), blank=True, default='', null=True)
+    notes = models.TextField(verbose_name=_('Примечание'), blank=True, default='', null=True)
 
     entity = models.ForeignKey(
         Entity,

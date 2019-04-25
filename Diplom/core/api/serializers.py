@@ -154,7 +154,7 @@ class ImageShortSerializer(serializers.ModelSerializer):
         model = Image
         fields = (
             'id', 'name_ru', 'name_en',
-            'create_data',
+            'create_date',
             'image_api_link', 'image_front_link',
         )
 
@@ -221,6 +221,6 @@ class ImageSerializer(serializers.ModelSerializer):
             'image', 'thumb_image',
             'name_ru', 'name_en', 'name_other',
             'description', 'description_lat', 'notes',
-            'create_data', 'source_link',
+            'create_date', 'source_link',
             'authors', 'entity', 'entity_api_link', 'entity_front_link',
         )
