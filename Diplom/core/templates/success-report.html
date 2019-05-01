@@ -1,0 +1,14 @@
+{% extends "./base.html" %}
+
+{% block content %}
+<div class="wrapp row3">
+  <main class="hoc container clear">
+    {% if user.is_authenticated %}
+        <p>Запрошенный отчет сформирован и сохранен в файл</p>
+        <p>{{ path }}</p>
+    {% else %}
+      <h2>Доступно только авторизованным пользователям</h2>
+    {% endif %}
+  </main>
+</div>
+{% endblock %}

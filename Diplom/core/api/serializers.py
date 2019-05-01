@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from rest_framework import serializers
 
-from ..models import Image, Author, Entity, AuthorAlias, AuthorsSpecialization
+from ..models import Image, Author, Entity, AuthorsSpecialization, Occupation, Land
 
 
 class PrimaryKeySerializerField(serializers.PrimaryKeyRelatedField):
@@ -42,6 +42,18 @@ class ImageURLField(serializers.URLField):
             return ""
 
 
+class OccupationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Occupation
+        fields = '__all__'
+
+
+class LandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Land
+        fields = '__all__'
+
+
 class ImageSpecializationSerializer(serializers.ModelSerializer):
     image_id = serializers.SlugRelatedField(
         read_only=True,
@@ -58,14 +70,6 @@ class ImageSpecializationSerializer(serializers.ModelSerializer):
         source='image',
         slug_field='name_en',
     )
-    image_api_link = serializers.HyperlinkedIdentityField(
-        view_name='image-detail',
-        source='image',
-    )
-    image_front_link = serializers.HyperlinkedIdentityField(
-        view_name='image-detail-front',
-        source='image',
-    )
     specialization = serializers.ChoiceField(
         choices=AuthorsSpecialization.SPECIALIZATIONS,
         source='get_specialization_display',
@@ -73,7 +77,7 @@ class ImageSpecializationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AuthorsSpecialization
-        fields = ('image_id', 'image_ru', 'image_en', 'image_api_link', 'image_front_link', 'specialization')
+        fields = ('image_id', 'image_ru', 'image_en', 'specialization')
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -81,30 +85,22 @@ class AuthorSerializer(serializers.ModelSerializer):
         many=True,
         required=False,
     )
-    aliases = serializers.PrimaryKeyRelatedField(
+    occupations = OccupationSerializer(
         many=True,
-        queryset=AuthorAlias.objects.all(),
-        source='authoralias_set',
+        required=False,
     )
-    author_api_link = serializers.HyperlinkedIdentityField(
-        view_name='author-detail',
-        source='author_id',
-        read_only=True,
-    )
-    author_front_link = serializers.HyperlinkedIdentityField(
-        view_name='author-detail-front',
-        source='author_id',
-        read_only=True,
+    lands = LandSerializer(
+        many=True,
+        required=False,
     )
 
     class Meta:
         model = Author
         fields = (
-            'id', 'index', 'main_image',
-            'name_ru', 'name_en', 'name_other',
-            'begin_date', 'end_date',
-            'notes', 'images', 'aliases',
-            'author_api_link', 'author_front_link',
+            'id', 'name_ru', 'name_en',
+            'begin_date', 'end_date', 'begin_work_date', 'end_work_date',
+            'index', 'gnd', 'notes',
+            'images', 'occupations', 'lands',
         )
 
 
@@ -123,27 +119,13 @@ class AuthorSpecSerializer(serializers.ModelSerializer):
         serializer=AuthorShortSerializer,
         queryset=Author.objects.all(),
     )
-    author_api_link = serializers.HyperlinkedIdentityField(
-        view_name='author-detail',
-        source='author',
-        read_only=True,
-    )
-    author_front_link = serializers.HyperlinkedIdentityField(
-        view_name='author-detail-front',
-        source='author',
-    )
 
     class Meta:
         model = AuthorsSpecialization
-        fields = ('id', 'author', 'author_api_link', 'author_front_link', 'specialization')
+        fields = ('id', 'author', 'specialization')
 
 
 class ImageShortSerializer(serializers.ModelSerializer):
-    image_api_link = serializers.HyperlinkedIdentityField(
-        view_name='image-detail',
-        source='self',
-        read_only=True,
-    )
     image_front_link = serializers.HyperlinkedIdentityField(
         view_name='image-detail-front',
         source='self',
@@ -155,7 +137,7 @@ class ImageShortSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name_ru', 'name_en',
             'create_date',
-            'image_api_link', 'image_front_link',
+            'image_front_link',
         )
 
 
@@ -166,48 +148,29 @@ class EntitySerializer(serializers.HyperlinkedModelSerializer):
         many=True,
         queryset=Image.objects.all(),
     )
-    entity_api_link = serializers.HyperlinkedIdentityField(
-        view_name='entity-detail',
-        source='self',
-        read_only=True,
-    )
-    entity_front_link = serializers.HyperlinkedIdentityField(
-        view_name='entity-detail-front',
-        source='self',
-        read_only=True,
-    )
 
     class Meta:
         model = Entity
         fields = (
-            'id', 'index',
-            'name_ru', 'name_en', 'name_other',
+            'id', 'index', 'normdate',
+            'name_ru', 'name_en',
             'begin_date', 'end_date',
             'description', 'notes',
             'source', 'source_link',
             'main_image', 'images',
-            'entity_api_link', 'entity_front_link',
         )
 
 
 class EntityShortSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Entity
-        fields = ('id', 'index', 'name_ru', 'name_en', 'name_other', 'begin_date', 'end_date',)
+        fields = ('id', 'index', 'name_ru', 'name_en', 'begin_date', 'end_date',)
 
 
 class ImageSerializer(serializers.ModelSerializer):
     authors = AuthorSpecSerializer(
         many=True,
         style={'base_template': 'list_fieldset.html'},
-    )
-    entity_api_link = serializers.HyperlinkedIdentityField(
-        view_name='entity-detail',
-        source='entity',
-    )
-    entity_front_link = serializers.HyperlinkedIdentityField(
-        view_name='entity-detail-front',
-        source='entity',
     )
     entity = PrimaryKeySerializerField(
         serializer=EntityShortSerializer,
@@ -217,10 +180,10 @@ class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
         fields = (
-            'id',
-            'image', 'thumb_image',
-            'name_ru', 'name_en', 'name_other',
+            'id', 'index_image_mu', 'index_image_hab',
+            'image', 'thumb_image', 'size',
+            'name_ru', 'name_en',
             'description', 'description_lat', 'notes',
-            'create_date', 'source_link',
-            'authors', 'entity', 'entity_api_link', 'entity_front_link',
+            'create_date', 'source_link', 'doublet_links', 'catalog_links',
+            'authors', 'entity', 'technique',
         )

@@ -13,11 +13,11 @@
         <p></p>
       {% endif %}
       <h2>Список персон</h2>
-      <div class="group demo">
+      <div>
         <table border= "1">
           {% for person in results %}
           <tr>
-            <td width="20%">{{person.index}}</td>
+            <td align="middle" width="20%">{{person.index}}</td>
             <td width="60%">
               <a href="/frontend/entity/{{ person.id }}/">
                 {{person.name_ru}}

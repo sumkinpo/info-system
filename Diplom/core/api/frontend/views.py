@@ -1,26 +1,28 @@
 from django.db.models import Q
-from django.http import Http404
-from django.shortcuts import get_object_or_404, redirect
+from django.http import Http404, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
-from django.views.generic import ListView
-from django.forms import widgets
+from django.views.generic import ListView, FormView
 from django.forms import inlineformset_factory
 from django.template import RequestContext
 from rest_framework import renderers
 
-from ...models import AuthorsSpecialization
+from ...models import AuthorsSpecialization, Author, Entity, Image, Occupation, Land
 from ..views import (
     ImageList, ImageDetail,
     AuthorList, AuthorDetail,
     EntityList, EntityDetail,
 )
-
-from ...models import Author, Entity, Image
-
-
-from django.shortcuts import render
-from django.http import HttpResponseRedirect
-from .forms import AuthorForm, EntityForm, ImageForm, SearchDetailForm, AuthorSpecializationForm
+from .forms import (
+    AuthorForm,
+    EntityForm,
+    ImageForm,
+    SearchDetailForm,
+    AuthorSpecializationForm,
+    OccupationForm,
+    LandForm,
+    ReportForm,
+)
 
 
 class BaseOperationView(View):
@@ -89,6 +91,57 @@ class AuthorView(BaseModelView):
     model = Author
     form = AuthorForm
     path_to_redirect = '/frontend/author'
+    template = 'operations_author.html'
+
+    def get(self, request, pk=None):
+        if pk is None:
+            form = self.form()
+            instance = None
+        else:
+            instance = get_object_or_404(self.model, pk=pk)
+            form = self.form(instance=instance)
+        OccupationInlineFormSet = inlineformset_factory(Author, Author.occupations.through, form=OccupationForm)
+        occupations_formset = OccupationInlineFormSet(instance=instance)
+
+        LandInlineFormSet = inlineformset_factory(Author, Author.lands.through, form=LandForm)
+        lands_formset = LandInlineFormSet(instance=instance)
+        return render(
+            request,
+            self.template,
+            {
+                'occupations_formset': occupations_formset,
+                'lands_formset': lands_formset,
+                'form': form,
+             },
+        )
+
+    def post(self, request, pk=None):
+        instance = None
+        OccupationInlineFormSet = inlineformset_factory(Author, Author.occupations.through, form=OccupationForm)
+        LandInlineFormSet = inlineformset_factory(Author, Author.lands.through, form=LandForm)
+        occupations_formset = OccupationInlineFormSet(request.POST, request.FILES, instance=instance)
+        lands_formset = LandInlineFormSet(request.POST, request.FILES, instance=instance)
+        if pk:
+            instance = get_object_or_404(self.model, pk=pk)
+        form = self.form(request.POST, request.FILES, instance=instance)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            occupations_formset = OccupationInlineFormSet(request.POST, request.FILES, instance=instance)
+            lands_formset = LandInlineFormSet(request.POST, request.FILES, instance=instance)
+            if occupations_formset.is_valid() and lands_formset.is_valid():
+                form.save(commit=True)
+                occupations_formset.save(commit=True)
+                lands_formset.save(commit=True)
+                return redirect(f'{self.path_to_redirect}/{instance.pk}/')
+        return render(
+            request,
+            self.template,
+            {
+                'occupations_formset': occupations_formset,
+                'lands_formset': lands_formset,
+                'form': form,
+            },
+        )
 
 
 class EntityView(BaseModelView):
@@ -116,11 +169,10 @@ class ImageView(BaseModelView):
 
     def post(self, request, pk=None):
         instance = None
-        AuthorInlineFormSet = inlineformset_factory(Image, AuthorsSpecialization, form=AuthorSpecializationForm)  #, fields=('specialization', 'author',), widgets={'author': widgets.Textarea})
+        AuthorInlineFormSet = inlineformset_factory(Image, AuthorsSpecialization, form=AuthorSpecializationForm)
         if pk:
             instance = get_object_or_404(self.model, pk=pk)
         form = self.form(request.POST, request.FILES, instance=instance)
-        formset = AuthorInlineFormSet(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             instance = form.save(commit=False)
             formset = AuthorInlineFormSet(request.POST, request.FILES, instance=instance)
@@ -181,15 +233,14 @@ class SearchDetailView(ListView):
                 .filter(
                     Q(name_ru__icontains=author_name)
                     | Q(name_en__icontains=author_name)
-                    | Q(name_other__icontains=author_name)
                 )
             )
             have_authors = True
         if have_authors:
             results += [
-                ('Автор: %s' % name_ru or name_en or name_other, f'/frontend/author/{pk}')
-                for name_ru, name_en, name_other, pk
-                in authors.values_list('name_ru', 'name_en', 'name_other', 'id')
+                ('Автор: %s (lat: %s)' % (name_ru, name_en), f'/frontend/author/{pk}/')
+                for name_ru, name_en, pk
+                in authors.values_list('name_ru', 'name_en', 'id')
             ]
 
         entity_name = self.request.GET.get('entity_name')
@@ -205,15 +256,14 @@ class SearchDetailView(ListView):
                 .filter(
                     Q(name_ru__icontains=entity_name)
                     | Q(name_en__icontains=entity_name)
-                    | Q(name_other__icontains=entity_name)
                 )
             )
             have_entitys = True
         if have_entitys:
             results += [
-                ('Персона: %s' % name_ru or name_en or name_other, f'/frontend/entity/{pk}')
-                for name_ru, name_en, name_other, pk
-                in entitys.values_list('name_ru', 'name_en', 'name_other', 'id')
+                ('Персона: %s (lat: %s)' % (name_ru, name_en), f'/frontend/entity/{pk}/')
+                for name_ru, name_en, pk
+                in entitys.values_list('name_ru', 'name_en', 'id')
             ]
 
         image_name = self.request.GET.get('image_name')
@@ -226,7 +276,6 @@ class SearchDetailView(ListView):
                 .filter(
                     Q(name_ru__icontains=image_name)
                     | Q(name_en__icontains=image_name)
-                    | Q(name_other__icontains=image_name)
                 )
             )
             have_images = True
@@ -241,7 +290,7 @@ class SearchDetailView(ListView):
             have_images = True
         if have_images:
             results += [
-                ('Изображение: %s (lat: %s)' % (name_ru, name_lat), f'/frontend/image/{pk}')
+                ('Изображение: %s (lat: %s)' % (name_ru, name_lat), f'/frontend/image/{pk}/')
                 for name_ru, name_lat, pk
                 in images.values_list('name_ru', 'name_en', 'id')
             ]
@@ -261,7 +310,6 @@ class SearchDetailView(ListView):
             query &= (
                 Q(name_ru__icontains=image_name)
                 | Q(name_en__icontains=image_name)
-                | Q(name_other__icontains=image_name)
             )
 
         if image_description:
@@ -274,7 +322,6 @@ class SearchDetailView(ListView):
             query &= (
                 Q(entity__name_ru__icontains=entity_name)
                 | Q(entity__name_en__icontains=entity_name)
-                | Q(entity__name_other__icontains=entity_name)
             )
         if entity_index:
             query &= Q(entity__index__icontains=entity_index)
@@ -284,7 +331,6 @@ class SearchDetailView(ListView):
             author_query &= (
                 Q(author__name_ru__icontains=author_name)
                 | Q(author__name_en__icontains=author_name)
-                | Q(author__name_other__icontains=author_name)
             )
         if author_index:
             author_query &= Q(author__index__icontains=author_index)
@@ -295,7 +341,7 @@ class SearchDetailView(ListView):
         images = Image.objects.filter(query)
 
         results = [
-            ('Изображение:' % name_ru or name_lat, f'/frontend/image/{pk}')
+            ('Изображение: %s (lat: %s)' % (name_ru, name_lat), f'/frontend/image/{pk}/')
             for name_ru, name_lat, pk
             in images.values_list('name_ru', 'name_en', 'id')
         ]
@@ -360,13 +406,12 @@ class SearchView(ListView):
             .filter(
                 Q(name_ru__icontains=query)
                 | Q(name_en__icontains=query)
-                | Q(name_other__icontains=query)
             )
         )
         results += [
-            ('Автор: %s' % name_ru or name_en or name_other, f'/frontend/author/{pk}')
-            for name_ru, name_en, name_other, pk
-            in authors.values_list('name_ru', 'name_en', 'name_other', 'id')
+            ('Автор: %s (lat: %s)' % (name_ru, name_en), f'/frontend/author/{pk}/')
+            for name_ru, name_en, pk
+            in authors.values_list('name_ru', 'name_en', 'id')
         ]
 
         entitys = (
@@ -375,13 +420,12 @@ class SearchView(ListView):
             .filter(
                 Q(name_ru__icontains=query)
                 | Q(name_en__icontains=query)
-                | Q(name_other__icontains=query)
             )
         )
         results += [
-            ('Персона: %s' % name_ru or name_en or name_other, f'/frontend/entity/{pk}')
-            for name_ru, name_en, name_other, pk
-            in entitys.values_list('name_ru', 'name_en', 'name_other', 'id')
+            ('Персона: %s (lat: %s)' % (name_ru, name_en), f'/frontend/entity/{pk}/')
+            for name_ru, name_en, pk
+            in entitys.values_list('name_ru', 'name_en', 'id')
         ]
 
         images = (
@@ -390,11 +434,10 @@ class SearchView(ListView):
             .filter(
                 Q(name_ru__icontains=query)
                 | Q(name_en__icontains=query)
-                | Q(name_other__icontains=query)
             )
         )
         results += [
-            ('Изображение: %s (lat: %s)' % (name_ru, name_lat), f'/frontend/image/{pk}')
+            ('Изображение: %s (lat: %s)' % (name_ru, name_lat), f'/frontend/image/{pk}/')
             for name_ru, name_lat, pk
             in images.values_list('name_ru', 'name_en', 'id')
         ]
@@ -416,17 +459,50 @@ class SearchView(ListView):
         return queryset
 
 
-def autocompleteModel(request):
+class ReportsView(FormView):
+    template_name = 'report.html'
+    form_class = ReportForm
+    success_url = '/success-report/'
+
+    def form_valid(self, form):
+        path = form.save_report()
+        return render(self.request, 'success-report.html', {'path': path})
+
+
+def autocompleteModel(request, model):
     import json
     from django.http import HttpResponse
-    if request.is_ajax():
-        q = request.GET.get('term', '').capitalize()
-        search_qs = Author.objects.filter(Q(name_ru__icontains=q) | Q(name_en__icontains=q)).order_by('name_ru')
-        results = []
-        for r in search_qs:
-            results.append(f'Ind: {r.index if r.index else "..."} | Рус: {r.name_ru if r.name_ru else "..."} | Lat: {r.name_en if r.name_en else "..."}')
-        data = json.dumps(results)
-    else:
-        data = 'fail'
     mimetype = 'application/json'
+    if not request.is_ajax():
+        return HttpResponse('fail', mimetype)
+    have_index=False
+    if model == 'author':
+        _model = Author
+        have_index = True
+    elif model == 'entity':
+        _model = Entity
+        have_index = True
+    elif model == 'occupation':
+        _model = Occupation
+    elif model == 'land':
+        _model = Land
+    else:
+        return HttpResponse('fail', mimetype)
+    q = request.GET.get('term', '').capitalize()
+    search_qs = _model.objects.filter(Q(name_ru__icontains=q) | Q(name_en__icontains=q)).order_by('name_ru')
+    results = []
+    if have_index:
+        for r in search_qs:
+            results.append(
+                f'Ind: {r.index if r.index else "..."} | '
+                f'Рус: {r.name_ru if r.name_ru else "..."} | '
+                f'Lat: {r.name_en if r.name_en else "..."}'
+            )
+    else:
+        for r in search_qs:
+            results.append(
+                f'Рус: {r.name_ru if r.name_ru else "..."} | '
+                f'Lat: {r.name_en if r.name_en else "..."}'
+            )
+    data = json.dumps(results)
     return HttpResponse(data, mimetype)

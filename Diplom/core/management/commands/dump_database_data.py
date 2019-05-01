@@ -33,7 +33,7 @@ class Command(BaseCommand):
         for image in Image.objects.select_related('entity').prefetch_related('authors', 'authors__author'):
             result.append({
                 'pk': image.pk,
-                'index_person': image.entity.index,
+                'index_person': image.entity.index if image.entity else None,
                 'authors': [
                     {'pk': author.author.pk, 'index': author.author.index, 'specialization': author.specialization}
                     for author
@@ -47,6 +47,12 @@ class Command(BaseCommand):
                 'create_date': image.create_date,
                 'source_link': image.source_link,
                 'notes': image.notes,
+                'index_image_mu': image.index_image_mu,
+                'index_image_hab': image.index_image_hab,
+                'size': image.size,
+                'technique': image.technique,
+                'doublet_links': image.doublet_links,
+                'catalog_links': image.catalog_links,
             })
         self.save(path_to_save, result)
 
@@ -56,10 +62,23 @@ class Command(BaseCommand):
             result.append({
                 'id': author.id,
                 'index': author.index,
+                'gnd': author.gnd,
                 'name_ru': author.name_ru,
                 'name_en': author.name_en,
                 'begin_date': author.begin_date,
                 'end_date': author.end_date,
+                'begin_work_date': author.begin_work_date,
+                'end_work_date': author.end_work_date,
+                'occupations': [
+                    {'pk': occupation.pk, 'name_ru': occupation.name_ru, 'name_en': occupation.name_en}
+                    for occupation
+                    in author.occupations.all()
+                ],
+                'lands': [
+                    {'pk': land.pk, 'name_ru': land.name_ru, 'name_en': land.name_en}
+                    for land
+                    in author.lands.all()
+                ],
                 'notes': author.notes,
             })
         self.save(path_to_save, result)
@@ -78,6 +97,7 @@ class Command(BaseCommand):
                 'source_link': entity.source_link,
                 'source': entity.source,
                 'notes': entity.notes,
+                'normdate': entity.normdate,
             })
         self.save(path_to_save, result)
 

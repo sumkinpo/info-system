@@ -18,44 +18,33 @@
           </tr>
           {% endfor %}
           </table>
-        <p></p>
-    {{ formset.management_form }}
-    <table border= "1">
-        <tr>
-            <td width="30%">Специализация:</td>
-            <td width="30%">Автор:</td>
-            <td width="30%">Удалить:</td>
-         </tr>
-      {% for form in formset %}
-        <tr>
-          {% for field in form.visible_fields %}
-          <td width="30%" align="left">{{ field }}</td>
-          {% endfor %}
-         </tr>
-        {% for field in form.hidden_fields %}
-        <ul hidden="hidden">{{ field }}</ul>
-        {% endfor %}
-      {% endfor %}
-    </table>
-    <button type="submit" class="save btn btn-default">Сохранить</button>
-    <button type="reset" class="delete btn btn-default" onclick="history.back();">Отменить</button>
-</form>
+          <button type="submit" class="save btn btn-default">Cформировать</button>
+          <button type="reset" class="delete btn btn-default">Отменить</button>
+        </form>
+      {% block manual_fields %}
+      {% endblock %}
     {% else %}
       <h2>Доступно только авторизованным пользователям</h2>
     {% endif %}
   </main>
 </div>
-<p></p>
-
-
 
 {% endblock %}
 
 {% block custom_js %}
 <script>
 $(function() {
-  $('[id$="-author"]').autocomplete({
+  $('[id="id_author"]').autocomplete({
     source: "/frontend/ajax_calls/search/author/",
+    minLength: 2,
+    formatItem: function(row) { return row[1] + ' (' + row[0] + ')'; },
+    formatResult: function(row) { return row[0]; },
+  });
+});
+
+$(function() {
+  $('[id="id_entity"]').autocomplete({
+    source: "/frontend/ajax_calls/search/entity/",
     minLength: 2,
     formatItem: function(row) { return row[1] + ' (' + row[0] + ')'; },
     formatResult: function(row) { return row[0]; },

@@ -25,16 +25,32 @@
           <tr>
             <td>Имя (рус.)</td>
             <td>{{name_ru}}</td>
-            <td rowspan="10" width="35.0%" height="35.0%" align="center"><a href="{{ main_image }}"><img src="{% if main_image %}{{ main_image }}{% else %}/media/no-image.jpg{% endif %}" alt=""></a></td>
           </tr>
           <tr>
             <td>Имя (lat.)</td>
             <td>{{name_en}}</td>
           </tr>
           <tr>
+            <td>Индекс GND:</td>
+            <td>{{ gnd }}</td>
+          </tr>
+          {% if begin_date or end_date %}
+          <tr>
             <td>Годы жизни:</td>
             <td>{% if begin_date %}{{ begin_date }}{% else %}...{% endif %} - {% if end_date %}{{ end_date }}{% else %}...{% endif %}</td>
           </tr>
+          {% elif begin_work_date or end_work_date %}
+          <tr>
+            <td>Годы творчества:</td>
+            <td>{% if begin_work_date %}{{ begin_work_date }}{% else %}...{% endif %} - {% if end_work_date %}{{ end_work_date }}{% else %}...{% endif %}</td>
+          </tr>
+          {% else %}
+          <tr>
+            <td>Годы жизни:</td>
+            <td>Неизвестны</td>
+          </tr>
+          {% endif %}
+
           {% if user.is_authenticated %}
           {% if notes %}
           <tr>
@@ -43,7 +59,22 @@
           </tr>
           {% endif %}
           {% endif %}
-
+          <tr>
+            <td>Специализации:</td>
+            {% if occupations %}
+            <td>{% for occupation in occupations %}{{occupation.name_ru}}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+            {% else %}
+            <td>Неизвестны</td>
+            {% endif %}
+          </tr>
+          <tr>
+            <td>Страны:</td>
+            {% if lands %}
+            <td>{% for land in lands %}{{land.name_ru}}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+            {% else %}
+            <td>Неизвестны</td>
+            {% endif %}
+          </tr>
           {% if images %}
           {% regroup images by specialization as image_list %}
           {% for image in image_list %}

@@ -51,6 +51,9 @@
       <li><a href="/frontend/entitys/">Люди</a></li>
       <li><a href="/frontend/authors/">Авторы</a></li>
       <li><a href="/frontend/search-detail/">Расширенный поиск</a></li>
+      {% if user.is_authenticated %}
+        <li><a href="/frontend/reports/">Выгрузить отчеты</a></li>
+      {% endif %}
     </ul>
   </nav>
 </div>

@@ -27,8 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
 
-LANGUAGE_CODE = 'ru'
-
 LANGUAGES = (
     ('ru', 'Russian'),
     ('en', 'English'),
@@ -161,3 +159,5 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
     'UPLOADED_FILES_USE_URL': True,
 }
+
+REPORT_PATH = os.path.join(BASE_DIR, 'reports')

@@ -21,12 +21,12 @@
         <p></p>
       {% endif %}
       <h2>Подробная информация о изображении</h2>
-      <div class="group demo">
+      <div>
         <table border= "1">
           <tr>
-            <td>Название (рус.)</td>
+            <td width="20.0%">Название (рус.)</td>
             <td>{{name_ru}}</td>
-            <td rowspan="100" width="35.0%" height="35.0%"><a href="{{ image }}"><img src="{% if image %}{{ image }} {% else %} /media/no-image.jpg {% endif %}" alt=""></a></td>
+            <td style="vertical-align:top" rowspan="100" width="35.0%" height="35.0%"><a href="{{ image }}"><img src="{% if image %}{{ image }} {% else %} /media/no-image.jpg {% endif %}" alt=""></a></td>
           </tr>
           <tr>
             <td>Название (lat.)</td>
@@ -39,12 +39,36 @@
             </td>
           </tr>
           <tr>
+            <td>Индекс в коллеции</td>
+            <td>{{ index_image_mu }}</td>
+          </tr>
+          <tr>
+            <td>Индекс в коллеции HAB</td>
+            <td>{{ index_image_hab }}</td>
+          </tr>
+          <tr>
             <td>Описание</td>
             <td>{% if description %} {{ description }} {% else %} {{ description_lat }} {% endif %}</td>
           </tr>
           <tr>
+            <td>Размер</td>
+            <td>{{ size }}</td>
+          </tr>
+          <tr>
+            <td>Техника исполнения</td>
+            <td>{{ technique }}</td>
+          </tr>
+          <tr>
             <td>Ссылка на источник</td>
-            <td>{{source_link}}</td>
+            <td>{{ source_link }}</td>
+          </tr>
+          <tr>
+            <td>Ссылки на дублеты</td>
+            <td>{{ doublet_links }}</td>
+          </tr>
+          <tr>
+            <td>Ссылки на каталоги</td>
+            <td>{{ catalog_links }}</td>
           </tr>
           {% if authors %}
           {% regroup authors by specialization as author_list %}

@@ -3,6 +3,7 @@ from .views import (
     FrontendEntityList, FrontendEntityDetail, EntityView, EntityOperation,
     FrontendAuthorList, FrontendAuthorDetail, AuthorView, AuthorOperation,
     SearchDetailView, SearchView, autocompleteModel,
+    ReportsView,
 )
 from django.conf.urls import url
 
@@ -28,5 +29,7 @@ urlpatterns = [
     url(r'^search-detail/$', SearchDetailView.as_view(), name='search-detail'),
     url(r'^search/$', SearchView.as_view(), name='search'),
 
-    url(r'^ajax_calls/search/', autocompleteModel, name='auto-complete'),
+    url(r'^reports/$', ReportsView.as_view(), name='reports'),
+
+    url(r'^ajax_calls/search/(?P<model>\w+)/', autocompleteModel, name='auto-complete'),
 ]

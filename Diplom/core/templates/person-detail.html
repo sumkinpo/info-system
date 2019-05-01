@@ -21,12 +21,12 @@
         <p></p>
       {% endif %}
       <h2>Индекс: {% if index %} {{ index }} {% else %} не указан {% endif %}</h2>
-      <div class="group demo">
+      <div>
         <table border= "1">
           <tr>
-            <td>Имя (рус.)</td>
+            <td width="20.0%">Имя (рус.)</td>
             <td>{{name_ru}}</td>
-            <td rowspan="100" width="30.0%" height="30.0%"><a href="{{ main_image }}"><img src="{% if main_image %}{{ main_image }}{% else %}/media/no-image.jpg{% endif %}" alt=""></a></td>
+            <td style="vertical-align:top" rowspan="100" width="30.0%" height="30.0%"><a href="{{ main_image }}"><img src="{% if main_image %}{{ main_image }}{% else %}/media/no-image.jpg{% endif %}" alt=""></a></td>
           </tr>
           <tr>
             <td>Имя (lat.)</td>
@@ -35,6 +35,10 @@
           <tr>
             <td>Годы жизни:</td>
             <td>{% if begin_date %}{{ begin_date }}{% else %}...{% endif %} - {% if end_date %}{{ end_date }}{% else %}...{% endif %}</td>
+          </tr>
+          <tr>
+            <td>Нормативный контроль</td>
+            <td>{{ normdate }}</td>
           </tr>
           {% if user.is_authenticated %}
           {% if notes %}

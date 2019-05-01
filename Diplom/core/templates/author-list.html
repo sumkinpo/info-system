@@ -13,18 +13,22 @@
         <p></p>
       {% endif %}
       <h2>Список авторов</h2>
-      <div class="group demo">
+      <div>
         <table border= "1">
           {% for author in results %}
           <tr>
             <td width="70%">
               <div>
                 <a href="/frontend/author/{{ author.id }}/">
-                  {{author.name_ru}}(lat:{{author.name_en}}) ({% if author.begin_date %}{{ author.begin_date }}{% else %}...{% endif %} - {% if author.end_date %}{{ author.end_date }}{% else %}...{% endif %})
+                  {{author.name_ru}}(lat:{{author.name_en}}) (
+                    {% if author.begin_date or author.end_date %}
+                    {% if author.begin_date %} {{ author.begin_date }}{% else %}...{% endif %} - {% if author.end_date %}{{ author.end_date }}{% else %}...{% endif %}
+                    {% elif author.begin_work_date or author.end_work_date %}
+                    {% if author.begin_work_date %} {{ author.begin_work_date }}{% else %}...{% endif %} - {% if author.end_work_date %}{{ author.end_work_date }}{% else %}...{% endif %}
+                    {% else %}Годы жизни неизвестны{% endif %})
                 </a>
               </div>
             </td>
-            <td width="10%"><a href="/frontend/author/{{ author.id }}/"><img src="{% if author.main_image %}{{ author.main_image }}{% else %}/media/no-image.jpg{% endif %}" alt=""></a></td>
           </tr>
           {% endfor %}
         </table>
