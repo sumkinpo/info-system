@@ -348,9 +348,6 @@ class SearchDetailView(ListView):
 
         return results
 
-    def search(self):
-        return []
-
     def get_queryset(self):
         if 'find_all' in self.request.GET:
             queryset = self.find_all()
@@ -360,9 +357,6 @@ class SearchDetailView(ListView):
             queryset = self.find_image()
             self.request.session['searchset'] = queryset
             self.request.session['get_data'] = self.request.GET
-        elif 'search' in self.request.GET:
-            queryset = self.search()
-            self.request.session['searchset'] = queryset
         else:
             if self.request.session.get('searchset') and ('page' in self.request.GET):
                 queryset = self.request.session['searchset']

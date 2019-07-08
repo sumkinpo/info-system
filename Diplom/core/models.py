@@ -121,8 +121,8 @@ class Image(models.Model):
     source_link = models.URLField(verbose_name=_('Ссылка на источник'), blank=True, default='', null=True)
     notes = models.TextField(verbose_name=_('Примечание'), blank=True, default='', null=True)
 
-    index_image_mu = models.TextField(verbose_name=_('Индекс в коллеции'), blank=True, default='', null=True)
-    index_image_hab = models.TextField(verbose_name=_('Индекс в коллеции HAB'), blank=True, default='', null=True)
+    index_image_mu = models.TextField(verbose_name=_('Индекс в коллекции'), blank=True, default='', null=True)
+    index_image_hab = models.TextField(verbose_name=_('Индекс в коллекции HAB'), blank=True, default='', null=True)
     size = models.TextField(verbose_name=_('Размер'), blank=True, default='', null=True)
     technique = models.TextField(verbose_name=_('Техника исполнения'), blank=True, default='', null=True)
     doublet_links = models.TextField(verbose_name=_('Ссылки на дублеты'), blank=True, default='', null=True)

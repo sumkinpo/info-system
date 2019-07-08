@@ -25,7 +25,7 @@ SECRET_KEY = 'aul&#e0q6k0p5tp-g8+sxj^hitl$o37i3w6fn5%)s##j6*8#3='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', ]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
 
 LANGUAGES = (
     ('ru', 'Russian'),
